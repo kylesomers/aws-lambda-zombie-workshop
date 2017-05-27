@@ -68,7 +68,9 @@ Region | Launch Template
 
     This CloudFormation template creates resources in your account, including an S3 bucket that will store your website static assets. A [Lambda-backed Custom resource](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html) is used to copy the static website assets from a central hosting S3 bucket into your own newly-created bucket.
 
-9. You have successfully launched the Zombie workshop. You're ready to move onto the labs. Proceed to [Lab 1 Authentication with Cognito User Pools](1_Cognito).
+9. You have successfully launched the Zombie workshop. You're ready to move onto the labs. 
+
+    **Proceed to [Lab 1 Authentication with Cognito User Pools](1_Cognito).**
 
 ## Labs/Modules
 
