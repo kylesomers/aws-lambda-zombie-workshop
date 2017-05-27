@@ -6,7 +6,7 @@ This workshop provides a [CloudFormation](https://aws.amazon.com/cloudformation/
 
 The below diagram represents a high level overview of the completed workshop
 
-![Zombie Microservices Workshop Architecture](images/ZombieCompleteArchitecture.png)
+![Zombie Microservices Workshop Architecture](images/ZombieArchitectureHighLevel.png)
 
 Prior to beginning the labs, you will need to finalize the setup of User authentication for the application with [Cognito User Pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html). This is a necessary step to finalize the readiness of the application.
 
