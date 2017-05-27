@@ -29,7 +29,7 @@ You will use the AWS Management Console to create a User Pool for your applicati
 
 4. In the Pool Name text box, name your user pool `YOUR_CLOUDFORMATION_STACK_NAME-userpool`. For example, if you left your CloudFormation stack as the default name of "zombiestack" earlier, then your user pool name would be "zombiestack-userpool". After naming your User Pool, click **Step through Settings** to continue with manual setup.
 
-   ![UserPool-NameStep](images/UserPool-NameStep.png)
+   ![CognitoUserPool-NameStep](images/CognitoUserPool-NameStep.png)
 
 5. On the attributes page, select the **Required** checkbox for the following attributes: `email, name, phone number`. Make sure that all three are selected before continuing.
 
@@ -57,8 +57,14 @@ You will use the AWS Management Console to create a User Pool for your applicati
 
 14. On the custom triggers page, you will configure a `Pre authentication` trigger and a `Post confirmation` trigger. In the dropdowns for the **Pre authentication** and **Post confirmation** triggers, select the Lambda function named `YOUR_CLOUDFORMATION_STACK_NAME-CognitoLambdaTrigger-YOUR_REGION`. Click **Next step**.
 
-INSERT AN IMAGE FOR THIS STEP
+  ![CognitoUserPoolTriggers](images/CognitoUserPoolTriggers.png)
 
+15. Review the settings for your User Pool and click **Create pool**. If your pool created successfully you should be returned to the Pool Details page and it will display a green box that says **Your user pool was created successfully**.
+
+  ![CognitoUserPoolReviewSettings](images/CognitoUserPoolReviewSettings.png)
+
+16. Open a text editor on your computer and copy your `Pool Id` from the User Pool into the text editor. Then click into the **App clients** tab found on the left side navigation pane of the Cognito console. You should also see an **App client id** displayed in the User Pool details page. Copy the `App client id` into your text editor as well.
+  
 1. Choose the **Versioning** properties box.
 
    ![Bucket Versioning](images/create-bucket-2.png)
