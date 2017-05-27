@@ -46,8 +46,7 @@ Region | Launch Template
 **Singapore** (ap-southeast-1) | [![Launch Zombie Workshop Stack into Singapore with CloudFormation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=zombiestack&templateURL=https://s3-ap-southeast-1.amazonaws.com/aws-zombie-workshop-ap-southeast-1/CreateZombieWorkshop.json)
 **Sydney** (ap-southeast-2) | [![Launch Zombie Workshop Stack into Sydney with CloudFormation](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/images/cloudformation-launch-stack-button.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=zombiestack&templateURL=https://s3-ap-southeast-2.amazonaws.com/aws-zombie-workshop-ap-southeast-2/CreateZombieWorkshop.json)
 
-<details>
-<summary><strong>CloudFormation Launch Instructions (expand for details)</strong></summary><p>
+<summary><strong>CloudFormation Launch Instructions</strong></summary><p>
 
 1. Click the **Launch Stack** link above for the region of your choice.
 
@@ -71,7 +70,7 @@ Region | Launch Template
 
 9. You have successfully launched the Zombie workshop. You're ready to move onto the labs. Proceed to [Lab 1 Authentication with Cognito User Pools](1_Cognito).
 
-</p></details>
+</p>
 
 ## Labs/Modules
 
