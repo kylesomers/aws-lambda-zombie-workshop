@@ -31,6 +31,10 @@ All of the resources you will launch as part of this workshop are eligible for t
 
 We recommend you use the latest version of Chrome or Firefox when testing the web application UI.
 
+## Get Started!
+
+Put stuff here about getting started.
+
 ## Labs/Modules
 
 Each of the labs in this workshop depends on the provided CloudFormation template that you will launch. 
@@ -41,7 +45,21 @@ Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding
 
 1. [Authentication with Cognito User Pools (Required)](1_Cognito)
 2. [Survivor Chat Typing Indicator](2_TypingIndicator)
+
+* In this lab you will configure a new typing indicator service in your existing zombie REST API. You will configure the survivor chat application to display which survivors are currently typing in the chat room. This lab uses Lambda, DynamoDB, and API Gateway.
+
 3. [SMS Text Message Integration with Twilio](3_TwilioSMS)
+
+* This exercise uses [Twilio](http://twilio.com) to integrate SMS text functionality with the survivor chat application. You will configure a free-trial Twilio phone number so that users can send text messages to the survivor chat application. You'll learn how to use the mapping templates in API Gateway to perform request/response transformations in an API. This lab uses Lambda, API Gateway, DynamoDB, and Twilio.
+
 4. [Message History Logging with Elasticsearch Service](4_Elasticsearch)
+
+* In this lab you'll setup near-realtime streaming of survivor chat messages from the Chat system into Amazon Elasticsearch Service to capture message history. This lab uses Lambda, DynamoDB, and Amazon Elasticsearch Service.
+
 5. [Send Messages from Slack](5_Slack)
+
+* This exercise integrates the popular messaging app, [Slack](http://slack.com), into the chat application so that survivors can send messages to survivors from Slack. This lab uses Lambda, API Gateway, DynamoDB, and Slack.
+
 6. [Zombie Motion Sensor w/ Intel Edison](6_ZombieSensor)
+
+* This exercise integrations motion sensor detection of zombies to the chat system using an Intel Edison board and a Grove PIR Motion Sensor, which is included in the [Intel® Edison and Grove IoT Starter Kit Powered by AWS](https://www.amazon.com/gp/product/B0168KU5FK?ref%5F=sr%5F1%5F1&qid=1488908337&sr=8-1-spons&keywords=grove%20iot%20starter%20kit%20aws&psc=1&smid=A1YP59NGBNBZUR&pldnSite=1). You will configure a Lambda function to consume motion detection events incoming from your sensor and send them into the survivor chat to alert survivors! You can alternatively use your own application code to simulate motiion events, use an [AWS IoT Button](https://aws.amazon.com/iotbutton/), or other IoT device to send messages into the survivor chat. This lab uses Lambda, DynamoDB, SNS, and an IoT device.
