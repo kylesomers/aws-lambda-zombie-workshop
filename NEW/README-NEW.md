@@ -37,9 +37,9 @@ Put stuff here about getting started.
 
 ## Labs/Modules
 
-**The labs you will complete in this workshop are -** 
-
 > Note: Before starting these labs, please make sure you have already launched the CloudFormation template (see above) and the status of the stack is CREATE_COMPLETE. Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding to the other labs. The rest of the labs (2-6) are indepedent sections and you may choose to do some or all of them, or in any order that you prefer.
+
+**The workshop consists of the following labs -** 
 
 - [**1. Authentication with Cognito User Pools (Required)**](1_Cognito) - In this required lab, you will integrate user authentication and API authorization into your serverless survivor chat application with [Amazon Cognito](https://aws.amazon.com/cognito/). 
 
