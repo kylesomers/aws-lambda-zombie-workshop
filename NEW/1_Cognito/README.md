@@ -14,42 +14,50 @@ Once a survivor has successfully logged into the communications system, their se
 
 > Note: Before starting this lab, please make sure you have already [launched the CloudFormation template](../README.md##Get-Started) and the status of the stack is CREATE_COMPLETE.
 
-### Region Selection
+### 1. Create the Cognito User Pool
 
-This workshop can be deployed in any AWS region that supports the following services:
-
-- Amazon API Gateway
-- Amazon S3
-- Amazon DynamoDB
-- AWS CodeBuild
-- AWS CodePipeline
-- AWS Lambda
-- AWS X-Ray
-
-You can refer to the [region table](https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/) in the AWS documentation to see which regions have the supported services. Among the supported regions you can choose are N. Virginia, Ohio, Oregon, Ireland, Frankfurt, and Sydney.
-
-Once you've chosen a region, you should deploy all of the resources for this workshop there. Make sure you select your region from the dropdown in the upper right corner of the AWS Console before getting started.
-
-![Region selection screenshot](images/region-selection.png)
-
-### 1. Create an S3 Bucket
-
-Use the console or AWS CLI to create an Amazon S3 bucket with versioning enabled. Keep in mind that your bucket's name must be globally unique. We recommend using a name like `wildrydes-devops-yourname`.
+You will use the AWS Management Console to create a User Pool for your application.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console choose **Services** then select **S3** under Storage.
+1. In the AWS Management Console, in the AWS Services search bar, type `cognito` and then select **Cognito** from the drop down.
 
-1. Choose **+Create Bucket**
+2. Choose **+Manage your User Pools**
 
-1. Provide a globally unique name for your bucket such as `wildrydes-devops-yourname`.
+3. In the Cognito User Pools console, select the blue **Create your User Pool** button in the upper right corner. 
 
-1. Select the Region you've chosen to use for this workshop from the dropdown.
+4. In the Pool Name text box, name your user pool `YOUR_CLOUDFORMATION_STACK_NAME-userpool`. For example, if you left your CloudFormation stack as the default name of "zombiestack" earlier, then your user pool name would be "zombiestack-userpool". After naming your User Pool, click **Step through Settings** to continue with manual setup.
 
-   ![Create bucket](images/create-bucket-1.png)
+   ![UserPool-NameStep](images/UserPool-NameStep.png)
 
-1. Choose **Next** in the lower right of the dialog.
+5. On the attributes page, select the **Required** checkbox for the following attributes: `email, name, phone number`. Make sure that all three are selected before continuing.
+
+  > Cognito User Pools allows you to define attributes that you'd like to associate with users of your application. These represent values that your users will provide when they sign up for your app. They are available to your application as a part of the session data provided to your client apps when users authenticate with Cognito.
+
+6. Click the link **Add custom attribute**. Type a **Name** of `slackuser` exactly as typed here and leave the rest of the fields as is. Then click **Add another attribute** and add another custom attribute named `slackteamdomain`, leaving the rest of the fields as is. Finally, add a 3rd custom attribute by clicking **Add another attribute** and type `camp` as the name, leaving the rest of the fields as is. Click **Next Step**.
+
+  ![CognitoAttributesSelection](images/CognitoAttributesSelection.png)
+
+7. On the next page, leave the Password policy settings as default and click **Next step**.
+
+8. On the verifications page, leave the defaults and click **Next step**.
+
+  > We will not require MFA for this application, or SMS. However, during our application's sign up process, we are requiring verification via email address. This is denoted with the email checkbox selected for "Do you want to require verification of emails or phone numbers?". With this setting, when users sign up for the application, a confirmation code will be sent to their email which they'll be required to input into the application for confirmation before their account creation is completed.
+
+9. On the next page, type `Signal Corps Survivor Confirmation` for the **Email subject**. We won't modify the message body but you could add your own custom message in there. We'll let Cognito send the confirmation code emails from the service email address, but in production you could configure Cognito to send these verifications from an SES verified address along with a custom message. Leave the rest of the default settings and click **Next step**.
+
+10. On the Tags page, leave the defaults and click **Next step**. 
+
+11. Next, on the Devices page, leave the default option of **No** selected and click **Next step**. 
+
+12. On the Apps page, click **Add an app client**. In the **App client name** textbox, type `Zombie Survivor Chat App` and make sure to **deselect** all of the checkboxes. Click **Set attribute read and write permissions** to expand it. 
+
+13. For both the **Readable Attributes** and **Writeable Attributes** settings, verify that **all of the checkboxes are selected**. Then click **Create app client**, and then click **Next step**.
+
+14. On the custom triggers page, you will configure a `Pre authentication` trigger and a `Post confirmation` trigger. In the dropdowns for the **Pre authentication** and **Post confirmation** triggers, select the Lambda function named `YOUR_CLOUDFORMATION_STACK_NAME-CognitoLambdaTrigger-YOUR_REGION`. Click **Next step**.
+
+INSERT AN IMAGE FOR THIS STEP
 
 1. Choose the **Versioning** properties box.
 
