@@ -31,7 +31,7 @@ We recommend you use the latest version of Chrome or Firefox when testing the we
 
 ## Get Started - Launch the workshop!
 
-To begin this workshop, **click one of the 'Deploy to AWS' buttons below for the region you'd like to use**. This is the AWS region where you will launch resources for the duration of this workshop. This will open the CloudFormation template in the AWS Management Console for the region you select.
+To begin this workshop, **click one of the 'Launch Stack' buttons below for the region you'd like to use**. This is the AWS region where you will launch resources for the duration of this workshop. This will open the CloudFormation template in the AWS Management Console for the region you select.
 
 Region | Launch Template
 ------------ | -------------
@@ -51,23 +51,23 @@ Region | Launch Template
 
 1. Click the **Launch Stack** link above for the region of your choice.
 
-1. Click **Next** on the Select Template page.
+2. Click **Next** on the Select Template page.
 
-1. Provide a globally unique name for the **Website Bucket Name** such as `wildrydes-yourname` and click **Next**.
-    ![Speficy Details Screenshot](../images/module1-cfn-specify-details.png)
+3. The **Stack name** has been auto-filled for you. You can customize that to a name of your choice **less than 15 characters in length** or leave as is. S
 
-1. On the Options page, leave all the defaults and click **Next**.
+4. In the **Parameters** section, if you want to develop with a team and would like to create IAM Users in your account to grant your teammates access, then specify how many teammates/users you want to be created in the **NumberOfTeammates** text box. Otherwise, leave it defaulted to 0 and no additional users will be created. The user launching the stack (you) already has the necessary permissions. Click **Next**.
 
-1. On the Review page, check the box to acknowledge that CloudFormation will create IAM resources and click **Create**.
-    ![Acknowledge IAM Screenshot](../images/cfn-ack-iam.png)
+    ![LaunchCloudFormationTemplate](images/LaunchCloudFormationTemplate.png)
 
-    This template uses a custom resource to copy the static website assets from a central S3 bucket into your own dedicated bucket. In order for the custom resource to write to the new bucket in your account, it must create an IAM role it can assume with those permissions.
+5. On the "Options" page, leave the defaults and click **Next**.
 
-1. Wait for the `wildrydes-webapp-1` stack to reach a status of `CREATE_COMPLETE`.
+6. On the "Review" page, verify your selections, then scroll to the bottom and select the checkbox **I acknowledge that AWS CloudFormation might create IAM resources**. Then click **Create** to launch your stack.
 
-1. With the `wildrydes-webapp-1` stack selected, click on the **Outputs** tab and click on the WebsiteURL link.
+7. Your stack will take about 3 minutes to launch and you can track its progress in the "Events" tab. When it is done creating, the status will change to **CREATE_COMPLETE**.
 
-1. Verify the Wild Rydes home page is loading properly and move on to the next module, [User Management](../2_UserManagement).
+8. Click the **Output** tab in CloudFormation and click the link for **MyChatRoomURL**. This should open your chat application in a new tab. Verify that your Zombie survivor chat application properly loads in the browser. Leave this tab open as you'll come back to it later.
+
+9. You have successfully launched the Zombie workshop. You're ready to move onto the labs. Proceed to [Lab 1 Authentication with Cognito User Pools](1_Cognito).
 
 </p></details>
 
