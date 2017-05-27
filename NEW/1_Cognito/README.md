@@ -1,107 +1,14 @@
 # Lab 1: Authentication with Cognito User Pools
 
-In this module you'll use the [Serverless Application Model (SAM)](https://github.com/awslabs/serverless-application-model) to define a serverless RESTful API that has functionality to list, create, view, update, and delete the unicorns in the Wild Rydes stable.
+In this lab, you will integrate user authentication and API authorization into your serverless survivor chat application with [Amazon Cognito](https://aws.amazon.com/cognito/). 
 
 ## Architecture Overview
 
-The architecture for the Unicorn API uses API Gateway to define an HTTP interface that trigger Lambda functions to read and write data to the DynamoDB database.
+The Zombie survivor chat requires a survivor to sign up for a user account in order to communicate with other survivors. Once a survivor signs up for an account, they will be able to authenticate into the communications system in order to chat with other apocalypse survivors. [Amazon Cognito](https://aws.amazon.com/cognito/) provides the ability to create user directories for this purpose with [Cognito User Pools](http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html). You will now setup the Cognito User Pool as a user directory for your survivors. 
 
-![Wild Rydes DevOps RESTful API Application Architecture](images/wildrydes-devops-api-architecture.png)
+Once a survivor has successfully logged into the communications system, their session will include temporary credentials from Cognito User Pools in the form of a JSON Web Tokens (JWT) that will be used by the application when making authenticated requests to the REST API.
 
-## Serverless Application Model (SAM) Overview
-
-AWS SAM is a model used to define serverless applications on AWS.
-
-AWS SAM is based on [AWS CloudFormation](https://aws.amazon.com/cloudformation/). A serverless application is defined in a [CloudFormation template](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/gettingstarted.templatebasics.html) and deployed as a [CloudFormation stack](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/updating.stacks.walkthrough.html). An AWS SAM template is a CloudFormation template.
-
-AWS SAM defines a set of objects which can be included in a CloudFormation template to describe common components of serverless applications easily.  In order to include objects defined by AWS SAM within a CloudFormation template, the template must include a `Transform` section in the document root with a value of `AWS::Serverless-2016-10-31`.
-
-The Unicorn API includes Amazon API Gateway HTTP endpoints that trigger AWS Lambda functions that read and write data to a Amazon DynamoDB database.  The SAM template for the Unicorn API describes a DynamoDB table with a hash key and Lambda functions to list, view and update Unicorns in the Wild Rydes stable.
-
-The Unicorn API components are defined in the [app-sam.yaml](unicorn-api/app-sam.yaml) CloudFormation template.  Next we'll review the Unicorn API components in more detail.
-
-### AWS::Serverless::SimpleTable
-
-Below is the code snippet from the SAM template that describes the DynamoDB table resource.
-
-```yaml
-  DynamodbTable:
-    Type: 'AWS::Serverless::SimpleTable'
-      Properties:
-        PrimaryKey:
-          Name: name
-          Type: String
-```
-
-Unicorns are uniquely identified in the Wild Rydes stable by **name**, a single String attribute that is used as the primary key in the DynamoDB table.  The [AWS::Serverless::SimpleTable](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable) resource meets this requirement and is used to define the DynamoDB table used by the API.  If a more complex configuration is required, you can substitute the SimpleTable with a [AWS::DynamoDB::Table](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html) resource definition.
-
-### AWS::Serverless::Function
-
-Below is the code snippet from the SAM template that describes the Lambda function that handles requests to view Unicorn data by Unicorn name.
-
-```yaml
-  ReadFunction:
-    Type: 'AWS::Serverless::Function'
-    Properties:
-      Runtime: nodejs6.10
-      CodeUri: app
-      Handler: read.lambda_handler
-      Description: View Unicorn by name
-      Events:
-        ReadApi:
-          Type: Api
-          Properties:
-            Path: /unicorns/{name}
-            Method: get
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref DynamodbTable
-      Policies:
-        - Version: '2012-10-17'
-          Statement:
-            - Effect: Allow
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamodbTable}'
-              Action:
-                - 'dynamodb:GetItem'
-```
-
-There are several [properties](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#properties) defined for the [AWS::Serverless::Function](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction) resource, which we'll review in turn.
-
-#### Runtime
-
-The Unicorn API is implemented in **Node.js 6.10**.  Additional runtimes are available for AWS Lambda.  Please refer to the [Lambda Execution Environment and Available Libraries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html) for the complete list.
-
-#### CodeUri
-
-The **CodeUri** property defines the location to the function code on your workstation relative to the SAM template.  In this example, "**app**" is used for the property value because the function code is in the `app` directory relative to the SAM template.
-
-#### Handler
-
-The **Handler** property defines the entry point for the Lambda function.  For Javascript, This is formatted as "**file**.**function**", where **file** is the Javascript filename without the ".js" extension relative to the **CodeUri** path defined above and **function** is the name of the function in the file that will be executed with the Lambda function is invoked.
-
-#### Events
-
-The **Events** property defines the sources that trigger the Lambda function invocation.  An [Api](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api) event source is defined to integrate the Lambda function with an API Gateway endpoint, however SAM supports Lamdba function triggers from a variety of [sources](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#event-source-types).
-
-The **Api** event source to view details of a Unicorn is defined at the RESTful resource `/unicorns/{name}` accessed using the HTTP GET method.  SAM will transform the Api event to an API Gateway resource and map the **name** value in the URL to a [pathParameter](http://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-mappings.html) in the event used to invoke the Lambda function.
-
-#### Environment
-
-The [Environment](http://docs.aws.amazon.com/lambda/latest/dg/env_variables.html) property defines a list of variables and values that will be accessible in the Lambda function, according to the access method defined by the Runtime.
-
-The Lambda functions communicate with DynamoDB to read and write data.  The DynamoDB table created by the CloudFormation Stack is referenced as the value for the `TABLE_NAME` environment variable, which can be referenced within the Lambda function.
-
-#### Policies
-
-The **Policies** property defines the access permissions to AWS resources in the [Lambda execution policy](http://docs.aws.amazon.com/lambda/latest/dg/intro-permission-model.html#lambda-intro-execution-role).  For each Unicorn API resource, an IAM policy s defined that describes only the actions required for that Lambda function when communicating with the DynamoDB table.  In this way, our application follows the IAM best practice of granting [*least privilege*](http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege).
-
-For the Unicorn API that views the details of a Unicorn, the Lambda function need only use the [GetItem](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_GetItem.html) method to find the Unicorn by its name, the primary key on the table.
-
-Alternatively, the AWS::Serverless::Function **Role** property can be used to refer to an IAM Role that contains the list of IAM Policies that define the access permissions required by the Lambda execution policy.
-
-Take a minute to review the SAM definitions in the app-sam.yaml file for the other API methods.  Note their simularities and differences.
-
-Next, we'll look at how CloudFormation is used to deploy the SAM Unicorn API.
+![Authentication with Cognito User Pools](images/CognitoArchitectureOverview.png)
 
 ## Implementation Instructions
 
