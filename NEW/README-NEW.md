@@ -16,22 +16,31 @@ Prior to beginning the labs, you will need to finalize the setup of User authent
 
 In order to complete this workshop you'll need an AWS Account with access to create AWS IAM, S3, DynamoDB, Lambda, API Gateway, Cognito, SNS, and Elasticsearch Service resources. 
 
-It is recommended to do this workshop individually with your own separate AWS Account. This maximizes the learning experience and allows you to keep your resources for further development and customization. If you choose to work as a team, please keep the following in mind:
+**It is recommended to do this workshop individually with your own separate AWS Account.** This maximizes the learning experience and allows you to keep your resources for further development and customization. 
 
-* The workshop has been designed with unique resource naming to allow for multiple CloudFormation stacks to be launched into a single AWS Account. This allows multiple users in one AWS Account to individually launch their own workshop CloudFormation template. However, there are manual resources that you will create in the labs, so make sure that you and your teammates are using unique names when manually creating new Lambda functions and other resources.
+You may optionally choose to work as a team, but please keep the following in mind:
 
-* Alternatively, one teammate can launch the CloudFormation template and provide a CloudFormation input representing the number of teammates you are working with. CloudFormation will then automatically create additional IAM Users in your AWS Account which you can share with your teammates if you would like to all work on the same instane of the workshop. In this scenario, it is common for the team to distribute the labs and each teammate will work on a different lab/module.
+* The workshop has been designed with unique resource naming to allow for multiple CloudFormation stacks to be launched into a single AWS Account. This allows multiple users in one AWS Account to individually launch their own workshop CloudFormation template. However, there are manual resources that you will create in the labs, so make sure that you and your teammates are using unique names when manually creating new Lambda functions and other resources. Also keep this in mind if you are deleting resources.
 
+* Alternatively, one teammate can launch the CloudFormation template and provide a CloudFormation input parameter representing the number of teammates you are working with. CloudFormation will then automatically create additional IAM Users in your AWS Account which you can share with your teammates. This is useful if you want to all work on the same instance of the workshop. In this scenario, it is common for the team to distribute the labs and each teammate will work on a different lab/module.
 
 All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
 
-## Modules
+### Browser
 
-A workshop consists of multiple modules. Each module should cover a single, cohesive topic and take between 30 and 60 minutes for all students to complete. Consider the least experienced students who are likely to take this workshop when scoping your modules.
+We recommend you use the latest version of Chrome or Firefox when testing the web application UI.
 
-You should strongly consider providing CloudFormation templates that students can use to launch any required resources from previous modules to enable students to jump ahead to later modules without having to complete the preceeding modules manually.
+## Labs/Modules
+
+Each of the labs in this workshop depends on the provided CloudFormation template that you will launch. 
+
+Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding to the other labs. The rest of the labs (2-6) are indepedent sections and you may choose to do some or all of them, or in any order that you prefer.
 
 Provide a numbered list with links to each module
 
-1. [Example Module 1](1_ExampleTemplate)
-2. [Example Module 2](2_Example2)
+1. [Authentication with Cognito User Pools (Required)](1_Cognito)
+2. [Survivor Chat Typing Indicator](2_TypingIndicator)
+3. [SMS Text Message Integration with Twilio](3_TwilioSMS)
+4. [Message History Logging with Elasticsearch Service](4_Elasticsearch)
+5. [Send Messages from Slack](5_Slack)
+6. [Zombie Motion Sensor w/ Intel Edison](6_ZombieSensor)
