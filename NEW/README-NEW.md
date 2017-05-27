@@ -39,9 +39,9 @@ Put stuff here about getting started.
 
 **The labs you will complete in this workshop are -** 
 
-> Note: Before starting these labs, please make sure you have already launched the CloudFormation template (see above) and the status of the stack is CREATE_COMPLETE.
+> Note: Before starting these labs, please make sure you have already launched the CloudFormation template (see above) and the status of the stack is CREATE_COMPLETE. Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding to the other labs. The rest of the labs (2-6) are indepedent sections and you may choose to do some or all of them, or in any order that you prefer.
 
-- [**1. Authentication with Cognito User Pools (Required)**](1_Cognito) - In this required lab, you will integrate user authentication and API authorization into your serverless survivor chat application with [Amazon Cognito](https://aws.amazon.com/cognito/).
+- [**1. Authentication with Cognito User Pools (Required)**](1_Cognito) - In this required lab, you will integrate user authentication and API authorization into your serverless survivor chat application with [Amazon Cognito](https://aws.amazon.com/cognito/). 
 
 - [**2. Survivor Chat Typing Indicator**](2_TypingIndicator) - In this lab you will configure a new typing indicator service in your existing zombie REST API. You will configure the survivor chat application to display which survivors are currently typing in the chat room. This lab uses Lambda, DynamoDB, and API Gateway.
 
@@ -52,5 +52,3 @@ Put stuff here about getting started.
 - [**5. Send Messages from Slack**](5_Slack) - This exercise integrates the popular messaging app, [Slack](http://slack.com), into the chat application so that survivors can send messages to survivors from Slack. This lab uses Lambda, API Gateway, DynamoDB, and Slack.
 
 - [**6. Zombie Motion Sensor w/ Intel Edison**](6_ZombieSensor) - This exercise integrations motion sensor detection of zombies to the chat system using an Intel Edison board and a Grove PIR Motion Sensor, which is included in the [Intel® Edison and Grove IoT Starter Kit Powered by AWS](https://www.amazon.com/gp/product/B0168KU5FK?ref%5F=sr%5F1%5F1&qid=1488908337&sr=8-1-spons&keywords=grove%20iot%20starter%20kit%20aws&psc=1&smid=A1YP59NGBNBZUR&pldnSite=1). You will configure a Lambda function to consume motion detection events incoming from your sensor and send them into the survivor chat to alert survivors! You can alternatively use your own application code to simulate motion events, use an [AWS IoT Button](https://aws.amazon.com/iotbutton/), or other IoT device to send messages into the survivor chat. This lab uses Lambda, DynamoDB, SNS, and an IoT device.
-
-Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding to the other labs. The rest of the labs (2-6) are indepedent sections and you may choose to do some or all of them, or in any order that you prefer.
