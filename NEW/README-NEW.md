@@ -24,7 +24,8 @@ You may optionally choose to work as a team, but please keep the following in mi
 
 * Alternatively, one teammate can launch the CloudFormation template and provide a CloudFormation input parameter representing the number of teammates you are working with. CloudFormation will then automatically create additional IAM Users in your AWS Account which you can share with your teammates. This is useful if you want to all work on the same instance of the workshop. In this scenario, it is common for the team to distribute the labs and each teammate will work on a different lab/module.
 
-All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details.
+All of the resources you will launch as part of this workshop are eligible for the AWS free tier if your account is less than 12 months old. See the [AWS Free Tier page](https://aws.amazon.com/free/) for more details. 
+
 
 ### Browser
 
@@ -36,7 +37,7 @@ Each of the labs in this workshop depends on the provided CloudFormation templat
 
 Lab 1 (Cognito Setup) is a required lab that must be completed before proceeding to the other labs. The rest of the labs (2-6) are indepedent sections and you may choose to do some or all of them, or in any order that you prefer.
 
-Provide a numbered list with links to each module
+**The labs you will complete in this workshop are -** 
 
 1. [Authentication with Cognito User Pools (Required)](1_Cognito)
 2. [Survivor Chat Typing Indicator](2_TypingIndicator)
