@@ -8,13 +8,11 @@ The Zombie survivor chat requires a survivor to sign up for a user account in or
 
 Once a survivor has successfully logged into the communications system, their session will include temporary credentials from Cognito User Pools in the form of a JSON Web Tokens (JWT) that will be used by the application when making authenticated requests to the REST API.
 
-![Authentication with Cognito User Pools](images/CognitoArchitectureOverview.png)
+  ![Authentication with Cognito User Pools](images/CognitoArchitectureOverview.png)
 
-## Implementation Instructions
+## Lab Instructions
 
-Each of the following sections provide an implementation overview and detailed, step-by-step instructions. The overview should provide enough context for you to complete the implementation if you're already familiar with the AWS Management Console or you want to explore the services yourself without following a walkthrough.
-
-If you're using the latest version of the Chrome, Firefox, or Safari web browsers the step-by-step instructions won't be visible until you expand the section.
+> Note: Before starting this lab, please make sure you have already [launched the CloudFormation template](../README.md##Get-Started) and the status of the stack is CREATE_COMPLETE.
 
 ### Region Selection
 

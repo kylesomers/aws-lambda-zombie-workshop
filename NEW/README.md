@@ -29,9 +29,9 @@ All of the resources you will launch as part of this workshop are eligible for t
 
 We recommend you use the latest version of Chrome or Firefox when testing the web application UI.
 
-## Get Started - Launch the workshop!
+## Get Started
 
-To begin this workshop, **click one of the 'Launch Stack' buttons below for the region you'd like to use**. This is the AWS region where you will launch resources for the duration of this workshop. This will open the CloudFormation template in the AWS Management Console for the region you select.
+To begin this workshop, **click one of the 'Launch Stack' buttons below for the region you'd like to use**. This is the AWS region where you will launch resources for the duration of this workshop. Once you have created a stack in a region, you should complete the labs in that same region. 
 
 Region | Launch Template
 ------------ | -------------
