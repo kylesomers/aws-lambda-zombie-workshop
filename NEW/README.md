@@ -53,7 +53,7 @@ Region | Launch Template
 
 2. Click **Next** on the Select Template page.
 
-3. The **Stack name** has been auto-filled for you. You can customize that to a name of your choice **less than 15 characters in length** or leave as is. S
+3. The **Stack name** has been auto-filled for you. You can customize that to a name of your choice **less than 15 characters in length** or leave as is.
 
 4. In the **Parameters** section, if you want to develop with a team and would like to create IAM Users in your account to grant your teammates access, then specify how many teammates/users you want to be created in the **NumberOfTeammates** text box. Otherwise, leave it defaulted to 0 and no additional users will be created. The user launching the stack (you) already has the necessary permissions. Click **Next**.
 
@@ -66,6 +66,8 @@ Region | Launch Template
 7. Your stack will take about 3 minutes to launch and you can track its progress in the "Events" tab. When it is done creating, the status will change to **CREATE_COMPLETE**.
 
 8. Click the **Output** tab in CloudFormation and click the link for **MyChatRoomURL**. This should open your chat application in a new tab. Verify that your Zombie survivor chat application properly loads in the browser. Leave this tab open as you'll come back to it later.
+
+    This CloudFormation template creates resources in your account, including an S3 bucket that will store your website static assets. A [Lambda-backed Custom resource](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html) is used to copy the static website assets from a central hosting S3 bucket into your own newly-created bucket.
 
 9. You have successfully launched the Zombie workshop. You're ready to move onto the labs. Proceed to [Lab 1 Authentication with Cognito User Pools](1_Cognito).
 
