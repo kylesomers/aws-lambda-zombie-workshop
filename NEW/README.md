@@ -64,7 +64,7 @@ Region | Launch Template
 
 7. Your stack will take about 3 minutes to launch and you can track its progress in the "Events" tab. When it is done creating, the status will change to **CREATE_COMPLETE**.
 
-8. Click the **Output** tab in CloudFormation and click the link for **MyChatRoomURL**. This should open your chat application in a new tab. Verify that your Zombie survivor chat application properly loads in the browser. Leave this tab open as you'll come back to it later.
+8. Click the **Output** tab in CloudFormation and click the link for **MyChatRoomURL**. This should open your chat application in a new tab. Verify that your Zombie survivor chat application properly loads in the browser. Leave this tab open as you'll come back to it later. You'll need to reference the **Output** tab later on.
 
     This CloudFormation template creates resources in your account, including an S3 bucket that will store your website static assets. A [Lambda-backed Custom resource](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html) is used to copy the static website assets from a central hosting S3 bucket into your own newly-created bucket.
 

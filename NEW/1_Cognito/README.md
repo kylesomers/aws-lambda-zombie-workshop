@@ -64,30 +64,25 @@ You will use the AWS Management Console to create a User Pool for your applicati
   ![CognitoUserPoolReviewSettings](images/CognitoUserPoolReviewSettings.png)
 
 16. Open a text editor on your computer and copy your `Pool Id` from the User Pool into the text editor. Then click into the **App clients** tab found on the left side navigation pane of the Cognito console. You should also see an **App client id** displayed in the User Pool details page. Copy the `App client id` into your text editor as well.
-  
-1. Choose the **Versioning** properties box.
 
-   ![Bucket Versioning](images/create-bucket-2.png)
-
-1. Choose **Enable versioning** and click **Save** in the dialog box.
-
-   ![Bucket Enable Versioning](images/create-bucket-3.png)
-
-1. Choose **Next** in the lower right of the dialog.
-
-   ![Bucket Enable Versioning](images/create-bucket-4.png)
-
-1. Choose **Next** in the lower right of the dialog.
-
-1. Choose **Create Bucket** in the lower right of the dialog.
+You have now created a User Pool for your application users and you should have the `Pool Id` and `App client id` in your text editor. Proceed to the next step of this lab to update your application code to work with this User Pool.
 
 </p></details>
 
-### 2. Clone or Download GitHub Repository
+### 2. Update the static website constants.js config file
 
-This workshop requires you to modify text files on your workstation and to package the application project for deployment.  To obtain a local copy, you will need to clone or download this GitHub Repository.
+The zombie chat application uses a [constants.js](../app/assets/js/constants.js) file to bootstrap the application with variables in order to work properly. This file was partially updated by CloudFormation as a part of the deployment process. In this step, you will download that file from your S3 bucket, update the file, and re-upload it to your S3 bucket with the rest of the configuration variables needed to make the application work.
 
-1.  In your web browser, open the following link to the [Wild Rydes Serverless Workshop](https://github.com/awslabs/aws-serverless-workshops).
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
+1. In the AWS Management Console, in the AWS Services search bar, type `S3` and then select **S3** from the drop down. Navigate to the S3 bucket that was created for you by when you launched the CloudFormation stack. If you don't know the name of your bucket, you can find it in the **Output** tab in the CloudFormation console listed as `Bucket`.
+
+2. Click your bucket and navigate to the **constants.js** file found in the following folder path, `YOUR_BUCKET_NAME/S3/assetsjs/constants.js`. Download the file to your local machine and open it.
+
+3. With the constants.js file open, Set the **USER_POOL_ID** variable to your `Pool Id` from your text editor. Set the **CLIENT_ID** to your `App client id` from your text editor and save the constants.js file.
+
+</p></details>
 
 #### 2a. Clone the GitHub Repository
 
