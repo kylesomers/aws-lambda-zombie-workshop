@@ -4,9 +4,9 @@ In this lab, you will integrate user authentication and API authorization into y
 
 ## Architecture Overview
 
-The Zombie survivor chat requires a survivor to sign up for a user account in order to communicate with other survivors. Once a survivor signs up for an account, they will be able to authenticate into the communications system in order to chat with other apocalypse survivors. [Amazon Cognito](https://aws.amazon.com/cognito/) provides the ability to create user directories for this purpose with [Cognito User Pools](http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html). You will now setup the Cognito User Pool as a user directory for your survivors. 
+The Zombie survivor chat requires a survivor to sign up for a user account in order to communicate with other survivors. Once a survivor signs up for an account, they will be able to authenticate into the communications system in order to chat with other apocalypse survivors. [Amazon Cognito](https://aws.amazon.com/cognito/) provides the ability to create user directories for your application users with [Cognito User Pools].(http://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools.html). You will now setup a new Cognito User Pool as a user directory for your application. 
 
-Once a survivor has successfully logged into the communications system, their session will include temporary credentials from Cognito User Pools in the form of a JSON Web Tokens (JWT) that will be used by the application when making authenticated requests to the REST API.
+Once a survivor has successfully signed up for an account, they will be able to log into the communications system. When a user logs in, Cognito will return a JWT token (JSON Web Token) to the application which is used to fill the authentication header in web requests to your API from the application.
 
   ![Authentication with Cognito User Pools](images/CognitoArchitectureOverview.png)
 
@@ -23,17 +23,17 @@ You will use the AWS Management Console to create a User Pool for your applicati
 
 1. In the AWS Management Console, in the AWS Services search bar, type `cognito` and then select **Cognito** from the drop down.
 
-2. Choose **+Manage your User Pools**
+2. Choose **Manage your User Pools**
 
-3. In the Cognito User Pools console, select the blue **Create your User Pool** button in the upper right corner. 
+3. In the Cognito User Pools console, select the blue **Create a User Pool** button in the upper right corner. 
 
-4. In the Pool Name text box, name your user pool `YOUR_CLOUDFORMATION_STACK_NAME-userpool`. For example, if you left your CloudFormation stack as the default name of "zombiestack" earlier, then your user pool name would be "zombiestack-userpool". After naming your User Pool, click **Step through Settings** to continue with manual setup.
+4. In the Pool Name text box, name your user pool `[YOUR CLOUDFORMATION STACK NAME]-userpool`. For example, if you left your CloudFormation stack as the default name of "zombiestack" earlier, then your user pool name would be "zombiestack-userpool". After naming your User Pool, click **Step through Settings** to continue with manual setup.
 
    ![CognitoUserPool-NameStep](images/CognitoUserPool-NameStep.png)
 
-5. On the attributes page, select the **Required** checkbox for the following attributes: `email, name, phone number`. Make sure that all three are selected before continuing.
+5. On the attributes page, select the **Required** checkbox for the following attributes: `email, name, phone number`. Make sure that these are the only attributes you select. The application for the this workshop is designed to only work with the above three attributes at this time. Make sure not to select additional options. 
 
-  > Cognito User Pools allows you to define attributes that you'd like to associate with users of your application. These represent values that your users will provide when they sign up for your app. They are available to your application as a part of the session data provided to your client apps when users authenticate with Cognito.
+> Note: Cognito User Pools allows you to define attributes that you'd like to associate with users of your application. These represent values that your users will provide when they sign up for your app. They are available to your application as a part of the session data provided to your client apps when users authenticate with Cognito. 
 
 6. Click the link **Add custom attribute**. Type a **Name** of `slackuser` exactly as typed here and leave the rest of the fields as is. Then click **Add another attribute** and add another custom attribute named `slackteamdomain`, leaving the rest of the fields as is. Finally, add a 3rd custom attribute by clicking **Add another attribute** and type `camp` as the name, leaving the rest of the fields as is. Click **Next Step**.
 
@@ -43,7 +43,7 @@ You will use the AWS Management Console to create a User Pool for your applicati
 
 8. On the verifications page, leave the defaults and click **Next step**.
 
-  > We will not require MFA for this application, or SMS. However, during our application's sign up process, we are requiring verification via email address. This is denoted with the email checkbox selected for "Do you want to require verification of emails or phone numbers?". With this setting, when users sign up for the application, a confirmation code will be sent to their email which they'll be required to input into the application for confirmation before their account creation is completed.
+> Note: We will not require MFA for this application, or SMS. However, during our application's sign up process, we are requiring verification via email address. This is denoted with the email checkbox selected for "Do you want to require verification of emails or phone numbers?". With this setting, when users sign up for the application, a confirmation code will be sent to their email which they'll be required to input into the application for confirmation before their account creation is completed.
 
 9. On the next page, type `Signal Corps Survivor Confirmation` for the **Email subject**. We won't modify the message body but you could add your own custom message in there. We'll let Cognito send the confirmation code emails from the service email address, but in production you could configure Cognito to send these verifications from an SES verified address along with a custom message. Leave the rest of the default settings and click **Next step**.
 
@@ -55,7 +55,7 @@ You will use the AWS Management Console to create a User Pool for your applicati
 
 13. For both the **Readable Attributes** and **Writeable Attributes** settings, verify that **all of the checkboxes are selected**. Then click **Create app client**, and then click **Next step**.
 
-14. On the custom triggers page, you will configure a `Pre authentication` trigger and a `Post confirmation` trigger. In the dropdowns for the **Pre authentication** and **Post confirmation** triggers, select the Lambda function named `YOUR_CLOUDFORMATION_STACK_NAME-CognitoLambdaTrigger-YOUR_REGION`. Click **Next step**.
+14. On the custom triggers page, you will configure a `Pre authentication` trigger and a `Post confirmation` trigger. In the dropdowns for the **Pre authentication** and **Post confirmation** triggers, select the Lambda function named `[YOUR CLOUDFORMATION STACK NAME]-CognitoLambdaTriggerFn-...`. Click **Next step**.
 
   ![CognitoUserPoolTriggers](images/CognitoUserPoolTriggers.png)
 
