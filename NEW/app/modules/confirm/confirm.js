@@ -19,13 +19,13 @@ angular.module('chatApp.confirm', [])
                 ClientId : CLIENT_ID
             };
 
-            var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+            var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
             var userData = {
                 Username : _username,
                 Pool : userPool
             };
 
-            var cognitoUser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUser(userData);
+            var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
             cognitoUser.confirmRegistration($scope.user.confirmCode, true, function(err, result) {
                 if (err) {
                     console.log(err);

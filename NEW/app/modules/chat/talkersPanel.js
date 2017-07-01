@@ -1,38 +1,33 @@
 angular.module('chatApp.talkersPanel', [])
-.controller('talkersPanelCtrl', function($scope, $rootScope, $resource, $timeout) {
+.controller('talkersPanelCtrl', function($scope, $rootScope, $http, $timeout) {
 
     $rootScope.$on("chatting", function() {
         var poll = function() {
             $timeout(function() {
                 if($rootScope.chatting) {
-                    console.log('Retrieving Talkers from Server');
-                
-                    var apigClient = apigClientFactory.newClient({
-                        region: AWS_REGION, // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
-                        accessKey: AWS.config.credentials.accessKeyId,
-                        secretKey: AWS.config.credentials.secretAccessKey, 
-                        sessionToken: AWS.config.credentials.sessionToken
-                    });
-
+                    console.log('Retrieving Talkers from Server'); 
                     var body = '';
-
-                    var params = '';
-                    var additionalParams = '';
-            
-
-                    apigClient.zombieTalkersGet(params, body, additionalParams)
-                        .then(function(result){
-                            if($rootScope.chatting) {
-                                console.log('talkers are: ' + result.data.Talkers);
-                                $scope.talkers = result.data.Talkers;
-                                
-                            } else {
-                                $scope.talkers = null;
-                            }
-                        }).catch(function(error){
-                            console.log('error: ' + error.data);
-                        });
-                    
+                    var req = {
+                        method: 'GET',
+                        url: MESSAGES_ENDPOINT + '/zombie/talkers',
+                        headers: {
+                            Authorization: $rootScope.chatuser.jwt,
+                            "Content-Type": "application/json"
+                        }
+                    }
+                    $http(req).then(function successCallback(response) {
+                        if($rootScope.chatting) {
+                            console.log('talkers are: ' + response.data.Talkers);
+                            $scope.talkers = response.data.Talkers;
+                            
+                        } else {
+                            $scope.talkers = null;
+                        }
+                        
+                    }, function errorCallback(response) {
+                            console.error('There was an error: ', response);
+                        // or server returns response with an error status.
+                    });
                     poll();
                 }
             }, 1000);
@@ -41,7 +36,7 @@ angular.module('chatApp.talkersPanel', [])
     });
     $rootScope.$on("not chatting", function() {
         //clear our model, which will clear out the messages from the panel
-     		$scope.talkers = null;
+     	$scope.talkers = null;
     });
 
 });

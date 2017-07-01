@@ -1,42 +1,36 @@
 angular.module('chatApp.chatPanel', ['chatApp.chatMessages'])
-.controller('chatPanelCtrl', function($scope, $rootScope, $resource, $timeout) {
+.controller('chatPanelCtrl', function($scope, $rootScope, $http, $timeout) {
 
     $rootScope.$on("chatting", function() {
-        var Messages = $resource(MESSAGES_ENDPOINT);
 
         var poll = function()
         {
             $timeout(function() {
-                if($rootScope.chatting) 
-                {
+                if($rootScope.chatting) {
                     console.log('Retrieving Messages from Server');
 
-                    var apigClient = apigClientFactory.newClient({
-                        region: AWS_REGION, // OPTIONAL: The region where the API is deployed, by default this parameter is set to us-east-1
-                        accessKey: AWS.config.credentials.accessKeyId,
-                        secretKey: AWS.config.credentials.secretAccessKey, 
-                        sessionToken: AWS.config.credentials.sessionToken
+                    var req = {
+                        method: 'GET',
+                        url: MESSAGES_ENDPOINT + '/zombie/messages',
+                        headers: {
+                            Authorization: $rootScope.chatuser.jwt,
+                            "Content-Type": "application/json"
+                        }
+                    }
+
+                    $http(req).then(function successCallback(response) {
+                        if($rootScope.chatting) {
+                            console.log('result: ' + JSON.stringify(response.data.messages));
+                            $scope.messages = response.data.messages;
+                        } else {
+                            $scope.messages = null;
+                        }
+                        
+                    }, function errorCallback(response) {
+                            console.error('There was an error: ', JSON.stringify(response));
+                        // or server returns response with an error status.
                     });
 
-                    var body = '';
-
-                    var params = '';
-                    var additionalParams = '';
-            
-
-                    apigClient.zombieMessageGet(params, body, additionalParams)
-                        .then(function(result){
-                            if($rootScope.chatting) {
-                                //console.log('result: ' + result.data.messages);
-                                $scope.messages = result.data.messages;
-                                
-                            } else {
-                                $scope.messages = null;
-                            }
-                        }).catch(function(result){
-                            console.log('error: ' + result);
-                        });
-                    
                     poll();
                 }
             }, 2000);

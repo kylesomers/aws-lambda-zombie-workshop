@@ -16,8 +16,6 @@ angular.module('chatApp.signup', ['chatApp.utils'])
 
     $scope.register = function(isValid) {
         console.log($scope.user);
-        var _username = $scope.user.email;
-        console.log(_username);
         if (isValid) {
             console.log("Submitted " + $scope.user.name);
 
@@ -26,9 +24,11 @@ angular.module('chatApp.signup', ['chatApp.utils'])
                 ClientId : CLIENT_ID
             };
 
-
-            var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
-
+            var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+            if (typeof AWSCognito !== 'undefined') {
+                AWSCognito.config.region = AWS_REGION;
+            }
+            console.log('AWS Region is set as ' + AWSCognito.config.region);
             var attributeList = [];
 
             var dataEmail = {
@@ -59,12 +59,12 @@ angular.module('chatApp.signup', ['chatApp.utils'])
                 Value : $scope.user.slackteamdomain ? $scope.user.slackteamdomain : "null"
             };
 
-            var attributeEmail = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataEmail);
-            var attributePhoneNumber = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataPhoneNumber);
-            var attributeName = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataName);
-            var attributeCamp = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataCamp);
-            var attributeSlackuser = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataSlackuser);
-            var attributeSlackteamdomain = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserAttribute(dataSlackteamdomain);
+            var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+            var attributePhoneNumber = new AmazonCognitoIdentity.CognitoUserAttribute(dataPhoneNumber);
+            var attributeName = new AmazonCognitoIdentity.CognitoUserAttribute(dataName);
+            var attributeCamp = new AmazonCognitoIdentity.CognitoUserAttribute(dataCamp);
+            var attributeSlackuser = new AmazonCognitoIdentity.CognitoUserAttribute(dataSlackuser);
+            var attributeSlackteamdomain = new AmazonCognitoIdentity.CognitoUserAttribute(dataSlackteamdomain);
 
             attributeList.push(attributeEmail);
             attributeList.push(attributePhoneNumber);
@@ -73,7 +73,7 @@ angular.module('chatApp.signup', ['chatApp.utils'])
             attributeList.push(attributeSlackuser);
             attributeList.push(attributeSlackteamdomain);
 
-            userPool.signUp(_username, $scope.user.password, attributeList, null, function(err, result){
+            userPool.signUp($scope.user.email, $scope.user.password, attributeList, null, function(err, result){
                 if (err) {
                     console.log(err);
                     $scope.errormessage = "An unexpected error has occurred. Please try again. Error: " + err;

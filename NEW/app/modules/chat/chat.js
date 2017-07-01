@@ -5,23 +5,23 @@ angular.module('chatApp.chat', ['chatApp.utils'])
     $rootScope.chatuser = {
         name: "",
         phone: "",
-        email: ""
+        email: "",
+        jwt: ""
     };
 
-    var data = {
-        UserPoolId : USER_POOL_ID,
-        ClientId : CLIENT_ID
-    };
-    var userPool = new AWSCognito.CognitoIdentityServiceProvider.CognitoUserPool(data);
     var cognitoUser = userPool.getCurrentUser();
-
-    if (cognitoUser != null) {
+    var jwt;
+    if (cognitoUser) {
         cognitoUser.getSession(function(err, session) {
             if (err) {
                 $scope.signout(); 
                 return;
             }
+            
             console.log('session validity: ' + session.isValid());
+            $rootScope.chatuser.jwt = session.getIdToken().getJwtToken();
+            console.log('ID Token is: ' + $rootScope.chatuser.jwt);
+            
             cognitoUser.getUserAttributes(function(err, result) {
                 if (err) {
                     console.log(err);
@@ -55,6 +55,7 @@ angular.module('chatApp.chat', ['chatApp.utils'])
         
     };
 
+    // all this does is toggle the chat, it doesn't log the user out.
     var logoff = function() {
         $scope.chatState = "Start Chatting";
         $rootScope.chatting = false;
@@ -76,7 +77,6 @@ angular.module('chatApp.chat', ['chatApp.utils'])
             $rootScope.chatting = false;
             $rootScope.$emit('not chatting');
             cognitoUser.signOut();
-            AWS.config.credentials.clearCachedId();
             $state.go('signin', { });
         }
     };
