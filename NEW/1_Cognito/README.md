@@ -98,9 +98,12 @@ The zombie chat application uses a [constants.js](../app/assets/js/constants.js)
 
 </p></details>
 
-## Implementation Validation
+### 3. Test the Sign Up and Sign In in the web application
 
-After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in!
+After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in! We want to make sure that the User Pool is setup correctly and is properly integrated with the Web Application. At the completion of this section you should be able to sign up for a survivor account, sign into the application, and send chat messages.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
 1. Navigate back to the browser tab where your zombie chat application is opened. If you closed that window, you can find the S3 URL to your applicaiton in the Outputs tab of your CloudFormation stack. 
 
@@ -115,6 +118,8 @@ After creating the User Pool and uploading a modified configuration constants fi
   ![CognitoConfirm](images/CognitoConfirm.png)
 
 5. Once you have signed into the application, select the red **Start Chatting** button next to your name to enter the chat. This toggle allows you to manually enter and leave the chat and stop polling the API. Start typing messages in the chat and you should see your messages appearing in the chat window. Share your web application URL with your teammates so they can create accounts and chat with you!
+
+</p></details>
 
 ## Completion
 
