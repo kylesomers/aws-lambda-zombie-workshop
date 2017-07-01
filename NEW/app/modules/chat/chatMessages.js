@@ -17,11 +17,11 @@ angular.module('chatApp.chatMessages', [])
     
         if (keyEvent.which === 13) {
             $scope.posting = true;
-            console.log('Sending Message: ' + $scope.chatMessage);
 
             var body = {
                 channel: 'default',
-                name: [$rootScope.chatuser.name, " (", $rootScope.chatuser.email, ")"].join(""),
+                name: $rootScope.chatuser.name,
+                email: $rootScope.chatuser.email,
                 message: $scope.chatMessage
             };
             
@@ -30,20 +30,30 @@ angular.module('chatApp.chatMessages', [])
                 url: MESSAGES_ENDPOINT + '/zombie/messages/message',
                 headers: {
                     Authorization: $rootScope.chatuser.jwt,
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json',
+                    'clientcode': 'zombie-webapp'
                 },
                 data: body
             }
 
-            $http(req).then(function successCallback(response) {
+            console.log('Sending message to backend: ' + JSON.stringify(req))
+
+            $http(req)
+            .then(function (response) {
+                //handle success
                 console.log('Message sent to database');
                 console.log ('user email is ' + $rootScope.chatuser.email);
                 $scope.chatMessage = null;
                 $scope.posting = false;
                 $scope.chatPlaceholder = "Enter a message and save humanity";
                   
-            }, function errorCallback(response) {
+            }, function (response) {
+                    //handle error
                     console.error('There was an error sending message: ', JSON.stringify(response));
+                    window.alert('There was an error sending the message. Try again or check the console logs to see full error');
+                    $scope.chatMessage = null;
+                    $scope.posting = false;
+                    $scope.chatPlaceholder = "Enter a message and save humanity";
                 // or server returns response with an error status.
             });
 
