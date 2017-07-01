@@ -119,6 +119,8 @@ After creating the User Pool and uploading a modified configuration constants fi
 
 5. Once you have signed into the application, select the red **Start Chatting** button next to your name to enter the chat. This toggle allows you to manually enter and leave the chat and stop polling the API. Start typing messages in the chat and you should see your messages appearing in the chat window. Share your web application URL with your teammates so they can create accounts and chat with you!
 
+  ![CognitoExampleMessage](images/CognitoExampleMessage.png)
+
 </p></details>
 
 ## Completion
