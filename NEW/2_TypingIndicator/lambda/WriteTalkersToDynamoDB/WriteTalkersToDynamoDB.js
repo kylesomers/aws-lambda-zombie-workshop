@@ -8,7 +8,7 @@ exports.handler = function(event, context, callback) {
   console.log('Received event:', JSON.stringify(event, null, 2));
 
   if (event.name === null) {
-    context.fail(new Error('name cannot be null: ' + JSON.stringify(event, null, 2)));
+    callback(new Error('name cannot be null: ' + JSON.stringify(event, null, 2)));
   }
 
   var params = {

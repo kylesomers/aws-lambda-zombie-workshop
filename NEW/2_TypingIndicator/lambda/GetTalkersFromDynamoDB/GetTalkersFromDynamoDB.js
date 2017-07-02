@@ -1,42 +1,31 @@
 console.log('Loading function');
+var aws = require('aws-sdk');
+var docClient = new aws.DynamoDB.DocumentClient();
+var table = process.env.MessagesTable
 
-var AWS = require('aws-sdk');
-
-var docClient = new AWS.DynamoDB.DocumentClient();
-var table = process.env.TalkersTable;
 exports.handler = function(event, context, callback) {
-  console.log('Received event:', JSON.stringify(event, null, 2));
-
-  var params = {
-    TableName: table,
-    KeyConditionExpression: 'channel = :hkey and talktime > :rkey',
-    ExpressionAttributeValues: {
-      ':hkey': 'default',
-      ':rkey': (Date.now() - 2000)
-    },
-    ConsistentRead: true
-  };
-
-  docClient.query(params, function(err, data) {
-    if (err) {
-      console.log('DDB Err:' + err);
-      context.fail(new Error('DynamoDB Error: ' + err));
-    } else {
-      console.log((Date.now() - 2000));
-      console.log(data);
-      Talkers = [];
-      Pushed = {};
-      data.Items.forEach(function(talker, index, array) {
-        if (Pushed.hasOwnProperty(talker.name) == false) {
-          Talkers.push(talker.name);
-          Pushed[talker.name] = true;
-        }
-
-      });
-      context.done(null, {
-        Talkers: Talkers
-      });
+    console.log("request: " + JSON.stringify(event));
+    var params = {
+        TableName: table,
+        KeyConditionExpression: 'channel = :channel',
+        ExpressionAttributeValues: { ':channel': 'default' },
+        Limit: 20,
+        ScanIndexForward: true //we want to sort the results ascending from oldest to newest so recent messages appear at the bottom!
     }
-
-  });
-};
+    console.log("Querying DynamoDB");
+    docClient.query(params, function(err, data) {
+        if (err) {
+            callback(err)
+        } else {
+            console.log(JSON.stringify(data));
+            var responseBody = {
+                statusCode: 200,
+                body: data.Items,
+                headers: {
+                    'Access-Control-Allow-Origin' : '*' // Required for CORS support to work
+                },
+            };
+            callback(null, responseBody)
+        }
+    });
+}

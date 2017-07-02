@@ -20,8 +20,8 @@ angular.module('chatApp.chatPanel', ['chatApp.chatMessages'])
 
                     $http(req).then(function successCallback(response) {
                         if($rootScope.chatting) {
-                            console.log('result: ' + JSON.stringify(response.data.messages));
-                            $scope.messages = response.data.messages;
+                            console.log('response is: ' + JSON.stringify(response));
+                            $scope.messages = response.data.body;
                         } else {
                             $scope.messages = null;
                         }
