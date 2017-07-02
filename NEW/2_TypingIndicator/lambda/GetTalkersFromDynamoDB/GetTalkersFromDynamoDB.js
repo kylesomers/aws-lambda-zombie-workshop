@@ -3,12 +3,12 @@ console.log('Loading function');
 var AWS = require('aws-sdk');
 
 var docClient = new AWS.DynamoDB.DocumentClient();
-
-exports.handler = function(event, context) {
+var table = process.env.TalkersTable;
+exports.handler = function(event, context, callback) {
   console.log('Received event:', JSON.stringify(event, null, 2));
 
   var params = {
-    TableName: 'zombiestack-talkers',
+    TableName: table,
     KeyConditionExpression: 'channel = :hkey and talktime > :rkey',
     ExpressionAttributeValues: {
       ':hkey': 'default',

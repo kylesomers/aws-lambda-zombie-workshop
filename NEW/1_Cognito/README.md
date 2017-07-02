@@ -14,7 +14,7 @@ In this lab you will perform the following steps -
 
 2. Update the Javascript application to integrate with User Pools
 
-3. Setup a Cognito User Pools Authorizer in API Gateway, configure your API methods to require Authorization
+3. Setup a Custom Authorizer in API Gateway, configure your API methods to require Authorization
 
   ![Authentication with Cognito User Pools](images/CognitoArchitectureOverview.png)
 
@@ -122,6 +122,14 @@ After creating the User Pool and uploading a modified configuration constants fi
   ![CognitoExampleMessage](images/CognitoExampleMessage.png)
 
 </p></details>
+
+### 3. Configure API Authorization on 
+
+After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in! We want to make sure that the User Pool is setup correctly and is properly integrated with the Web Application. At the completion of this section you should be able to sign up for a survivor account, sign into the application, and send chat messages.
+
+<details>
+<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
+
 
 ## Completion
 
