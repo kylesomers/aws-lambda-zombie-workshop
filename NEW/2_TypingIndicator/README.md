@@ -22,115 +22,93 @@ In this lab you will perform the following steps -
 
 > Note: Before starting this lab, please make sure you have already [launched the CloudFormation template](../README.md##Get-Started) and the status of the stack is CREATE_COMPLETE.
 
-### 1. Create the Cognito User Pool
+### 1. Change Mock Integration to Lambda Integration
 
-You will use the AWS Management Console to create a User Pool for your application.
+You will configure your API to use Lambda functions as the backend integration instead of MOCK Integrations that were deployed for you when you created the workshop.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
 
-1. In the AWS Management Console, in the AWS Services search bar, type `cognito` and then select **Cognito** from the drop down.
+1. Navigate to the API Gateway service. You can search for it on the main console homepage or type in the service name to quickly access the service (as shown below)
 
-2. Choose **Manage your User Pools**
+![API Gateway in Management Console](/Images/Typing-Step1.png)
 
-3. In the Cognito User Pools console, select the blue **Create a User Pool** button in the upper right corner. 
+2. On the APIs listing screen in API Gateway, click into your Zombie chat API. It should be prefixed with the name of your CloudFormation stack that launched it. This should be "ZombieAPI-[YOUR_STACK_NAME]". Select that API.
 
-4. In the Pool Name text box, name your user pool `[YOUR CLOUDFORMATION STACK NAME]-userpool`. For example, if you left your CloudFormation stack as the default name of "zombiestack" earlier, then your user pool name would be "zombiestack-userpool". After naming your User Pool, click **Step through Settings** to continue with manual setup.
+3. Click the **GET** method of your **/zombie/talkers** resource. You can do this by clicking the "GET" method under the /zombie/talkers resource. The GET method is highlighted in blue in the image below. Click there.
+![GET Method](/Images/Typing-Step3.png)
 
-   ![CognitoUserPool-NameStep](images/CognitoUserPool-NameStep.png)
+*This GET HTTP method is used by the survivor chat app to perform continuous queries on the DynamoDB talkers table to determine which users are typing.*
 
-5. On the attributes page, select the **Required** checkbox for the following attributes: `email, name, phone number`. Make sure that these are the only attributes you select. The application for the this workshop is designed to only work with the above three attributes at this time. Make sure not to select additional options. 
+4. Click the **Integration Request** box to modify the backend  Integration Request.
 
-> Note: Cognito User Pools allows you to define attributes that you'd like to associate with users of your application. These represent values that your users will provide when they sign up for your app. They are available to your application as a part of the session data provided to your client apps when users authenticate with Cognito. 
+5. On the **Integration Request** screen, change the integration to **Lambda Function** by selecting the radio button option.
 
-6. Click the link **Add custom attribute**. Type a **Name** of `slackuser` exactly as typed here and leave the rest of the fields as is. Then click **Add another attribute** and add another custom attribute named `slackteamdomain`, leaving the rest of the fields as is. Finally, add a 3rd custom attribute by clicking **Add another attribute** and type `camp` as the name, leaving the rest of the fields as is. Click **Next Step**.
+> Note: Currently, this API method is configured to use a "MOCK" integration. MOCK integrations are dummy backends that are useful when you are testing and don't yet have the backend built out but need the API to return sample dummy data. You will remove the MOCK integration and configure this GET method to connect to a Lambda function that queries DynamoDB.
 
-  ![CognitoAttributesSelection](images/CognitoAttributesSelection.png)
+6. For the **Lambda Region** field, select the region in which you launched the CloudFormation stack. 
 
-7. On the next page, leave the Password policy settings as default and click **Next step**.
+> Note: Select the region code that corresponds with the yellow CloudFormation button you clicked to launch the CloudFormation template. You can also look in the upper right corner of the AWS Management Console to see which region you are in. For example if you launched your stack in Virginia (us-east-1), then you will select us-east-1 as your Lambda Region.
 
-8. On the verifications page, leave the defaults and click **Next step**.
+> Note: When you launched the CloudFormation template, the launch also created several Lambda functions for you locally in the region where you launched your CFN stack - this includes functions for retrieving data from and putting data into a DynamoDB "Talkers" table with details about which survivors are currently typing in the chat room.
 
-> Note: We will not require MFA for this application, or SMS. However, during our application's sign up process, we are requiring verification via email address. This is denoted with the email checkbox selected for "Do you want to require verification of emails or phone numbers?". With this setting, when users sign up for the application, a confirmation code will be sent to their email which they'll be required to input into the application for confirmation before their account creation is completed.
+7. For the Lambda Function field, begin typing "gettalkers" in the text box. In the auto-fill dropdown, select the function that contains "GetTalkersFromDynamoDB" in the name. It should look something like this.... **[CloudformationTemplateName]-[XXXXXXX]-GetTalkersFromDynamoDB-[Your Region]**.
 
-9. On the next page, type `Signal Corps Survivor Confirmation` for the **Email subject**. We won't modify the message body but you could add your own custom message in there. We'll let Cognito send the confirmation code emails from the service email address, but in production you could configure Cognito to send these verifications from an SES verified address along with a custom message. Leave the rest of the default settings and click **Next step**.
+> Note: This Lambda function is written in NodeJs. It performs GetItem DynamoDB requests on a Table called Talkers. This talkers table contains records that are continuously updated whenever users type in the chat room. By hooking up this Lambda function to your GET method, it will get invoked by API Gateway when the chat app polls the API with GET requests.
 
-10. On the Tags page, leave the defaults and click **Next step**. 
+8. Select the blue **Save** button and click **OK** if a pop up asks you to confirm that you want to switch to Lambda integration. Then grant access for API Gateway to invoke the Lambda function by clicking "OK" again. This 2nd popup asks you to confirm that you want to allow API Gateway to be able to invoke your Lambda function.
 
-11. Next, on the Devices page, leave the default option of **No** selected and click **Next step**. 
+9. Click the **Method Execution** back button in the upper left corner to return to the method execution overview page. You'll now configure API Gateway with the HTTP response types you want your API to expose. For simplicity we will only configure 200 reponses. Click the **Method Response** section of the Method Execution Flow.
 
-12. On the Apps page, click **Add an app client**. In the **App client name** textbox, type `Zombie Survivor Chat App`. Then make sure to **deselect** all of the options checkboxes. We aren't generated a client secret. Click **Set attribute read and write permissions** to expand it. 
+10. Verify that a "200" Response Code exists for the Method Response. If not, add a 200 HTTP Status response. Click **Add Response**, type "200" in the status code text box and then click the little checkmark to save the method response, as shown below.
 
-13. For both the **Readable Attributes** and **Writeable Attributes** settings, verify that **all of the checkboxes are selected**. Then click **Create app client**, and then click **Next step**.
+![Method Response](/Images/Typing-Step10.png)
 
-14. On the custom triggers page, you will configure a `Pre authentication` trigger and a `Post confirmation` trigger. In the dropdowns for the **Pre authentication** and **Post confirmation** triggers, select the Lambda function named `[YOUR CLOUDFORMATION STACK NAME]-CognitoLambdaTriggerFn-...`. Click **Next step**.
+* You've configured the GET method of the /zombie/talkers resource to allow responses with HTTP status of 200. We could add more response types but we'll skip that for simplicity in this workshop.
 
-  ![CognitoUserPoolTriggers](images/CognitoUserPoolTriggers.png)
+11. Go to the /zombie/talkers POST method by clicking the "POST" option in the resource tree on the left navigation pane.
+![POST Method](/Images/Typing-Step11.png)
 
-15. Review the settings for your User Pool and click **Create pool**. If your pool created successfully you should be returned to the User Pool Details web page and it will display a green box that says **Your user pool was created successfully**.
+12. We're now going to configure to the /zombie/talkers resource to properly integrate with AWS Lambda on POST requests.
 
-  ![CognitoUserPoolReviewSettings](images/CognitoUserPoolReviewSettings.png)
+**Perform Steps 4-10 again** just as you did for the GET method. However, this time when you are selecting the Lambda Function for the Integration Request, you'll type **writetalkers** in the auto-fill and select the function that looks something like this... **[CloudformationTemplateName]-[XXXXXXX]-WriteTalkersToDynamoDB-[Your Region]**. This way on POST requests, API Gateway will invoke your **writetalkers** Lambda function. Don't forget to return to the Method Response section for this POST method and add a "200" HTTP response status as you did for the GET method earlier, if it doesn't exist already.
 
-16. Open a text editor on your computer and copy your `Pool Id` from the User Pool into the text editor. It should be displayed at the top of the page. Then click into the **App clients** tab found on the left side navigation pane of the Cognito console under General Settings. You should see an **App client id** displayed on the page. Copy the `App client id` into your text editor as well.
+* In the above steps you are configuring the POST method that is used by the chat app to insert data into DynamoDB Talkers table with details about which users are typing. You're performing the same exact method configuration for the POST method as you did for your GET method. However, since this POST method is used for sending data to the database, it triggers a different backend Lambda function. This function writes data to DynamoDB while the "GetTalkersToDynamoDB" function was used to retrieve data from DynamoDB. In practice, these two functionalities could be written into a single shared backend Lambda function.
 
-You have now created a User Pool for your application users and you should have the `Pool Id` and `App client id` in your text editor. Proceed to the next step of this lab to update your application code to work with this User Pool.
+13. Navigate to the /zombie/talkers OPTIONS method.
+
+14. Select the Method Response.
+
+15. If it does not exist, add a 200 method response. Click "Add Response", type "200" in the status code text box and then click the little checkmark to save the method response.
+
+16. Go back to the OPTIONS method flow and select the Integration Response. (To go back, there should be a blue hyperlink titled "Method Execution" which will bring you back to the method execution overview screen).
+
+17.  Add a new Integration response with a method response status of 200. Click the "Method response status" dropdown and select "200". Leave the "Content Handling" option set to **Passthrough**. When done, click the blue **Save** button.
+
+* In this section you configured the OPTIONS method simply to respond with HTTP 200 status code. The OPTIONS method type is simply used so that clients can retrieve details about the API resources that are available as well as the methods associated with them.
+
+18. Select the /zombie/talkers resource on the left navigation tree.
+![talker resource](/Images/Typing-Step19.png)
+
+19. Click the "Actions" box and select "Enable CORS" in the dropdown.
+
+20. Select Enable and Yes to replace the existing values. You should see all green checkmarks for the CORS options that were enabled, as shown below.
+![talker resource](/Images/Typing-Step21.png)
+
+> Note: If you don't see all green checkmarks, this is probably because you forgot to add the HTTP Status 200 code for the Method Response Section. Go back to the method overview section for your POST, GET, and OPTIONS method and make sure that it shows "HTTP Status: 200" in the Method Response box.
+
+21. Click the "Actions" box and select Deploy API  
+![talker resource](/Images/Typing-Step22.png)
+
+* In this workshop we deploy the API to a stage called "ZombieWorkshopStage". In your real world scenario, you'll likely create different stages of the API to reflect different versions that you'd like to maintain such as dev, staging, prod or others.
 
 </p></details>
-
-### 2. Update the static website constants.js config file
-
-The zombie chat application uses a [constants.js](../app/assets/js/constants.js) file to bootstrap the application with variables in order to work properly. This file will be updated by CloudFormation as a part of the deployment process with new bootstrap variables. In this step, you will download that file from your S3 bucket, update the file, and re-upload it to your S3 bucket with the rest of the configuration variables needed to make the application work.
-
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-
-1. Return to the main landing page of the AWS Management Console. In the AWS Services search bar, type `S3` and then select **S3** from the drop down. Navigate to the S3 bucket that was created for you by when you launched the CloudFormation stack. If you don't know the name of your bucket, you can find it in the **Output** tab in the CloudFormation console listed as `Bucket`.
-
-2. Click your bucket and navigate to the **constants.js** file found in the following folder path, `YOUR_BUCKET_NAME/app/assets/js/constants.js`. Download the file to your local machine and open it. 
-
-> Note: YOUR_BUCKET_NAME should be replaced with your actual bucket from the CloudFormation Output tab
-
-3. With the constants.js file open, Set the **USER_POOL_ID** variable to your `Pool Id` from your text editor. Set the **CLIENT_ID** to your `App client id` from your text editor and save the constants.js file.
-
-4. Upload your new **constants.js** file back to the same location where you originally downloaded it from. To do this, select the blue **Upload** button in S3 console to upload a new object.
-
-  ![CognitoUploadS3](images/CognitoUploadS3.png)
-
-</p></details>
-
-### 3. Test the Sign Up and Sign In in the web application
-
-After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in! We want to make sure that the User Pool is setup correctly and is properly integrated with the Web Application. At the completion of this section you should be able to sign up for a survivor account, sign into the application, and send chat messages.
-
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-
-1. Navigate back to the browser tab where your zombie chat application is opened. If you closed that window, you can find the S3 URL to your applicaiton in the Outputs tab of your CloudFormation stack. 
-
-2. In our application we are not dynmically pulling down configuration changes automatically. If you already had the application open in your browser, make sure to refresh the page to ensure that the updated constants file is loaded.
-
-3. Select the **Sign Up** link to switch views. Fill out your information to sign up for the survivor chat service as shown below.
-
-  ![CognitoSignUpStep](images/CognitoSignUpStep.png)
-
-4. After filling in your information, click **Sign Up** which should forward you to a confirmation screen as shown below. Head to your email inbox for the email address you used during the sign up process. You should have received a no-reply email (we didn't setup custom SMTP in this workshop) with your confirmation code from Cognito. Check your spam folder if you can't find it. Insert that code along with your email address into the confirmation screen in the application and select the **Confirm** button. If confirmed, you will be forwarded to the sign in page where you can sign into the chat with your credentials.
-
-  ![CognitoConfirm](images/CognitoConfirm.png)
-
-5. Once you have signed into the application, select the red **Start Chatting** button next to your name to enter the chat. This toggle allows you to manually enter and leave the chat and stop polling the API. Start typing messages in the chat and you should see your messages appearing in the chat window. Share your web application URL with your teammates so they can create accounts and chat with you!
-
-  ![CognitoExampleMessage](images/CognitoExampleMessage.png)
-
-</p></details>
-
-### 3. Configure API Authorization on 
-
-After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in! We want to make sure that the User Pool is setup correctly and is properly integrated with the Web Application. At the completion of this section you should be able to sign up for a survivor account, sign into the application, and send chat messages.
-
-<details>
-<summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>
-
 
 ## Completion
 
-In this lab you successfully setup a user directory for your serverless application and integrated it with your application. In the next [Continuous Delivery Pipeline Module](../2_ContinuousDeliveryPipeline), you will learn how to automate this deployment process using AWS CodePipeline and AWS CodeBuild.
+Head back to the survivor chat app and **Refresh the page** type messages. POST requests are being made to the Talkers API resource which is updating a DynamoDB table continuously with timestamps along with who is typing. Simultaneously, the application is performing a continuous polling (GET Requests) against /zombie/talkers to show which survivors are typing. This displays
+
+![talker resource](/Images/Typing-Done.png)
+
+In this lab you successfully configured your API to support typing indicators in the web client!
+
