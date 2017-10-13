@@ -12,8 +12,7 @@ angular.module('chatApp.talkersPanel', [])
                         url: MESSAGES_ENDPOINT + '/talkers',
                         headers: {
                             Authorization: $rootScope.chatuser.jwt,
-                            "Content-Type": "application/json",
-                            'Access-Control-Allow-Origin': '*'
+                            "Content-Type": "application/json"
                         }
                     }
                     $http(req).then(function successCallback(response) {
