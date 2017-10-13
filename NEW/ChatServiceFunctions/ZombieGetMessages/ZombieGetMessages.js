@@ -1,10 +1,10 @@
 console.log('Loading function');
 var aws = require('aws-sdk');
 var docClient = new aws.DynamoDB.DocumentClient();
-var table = process.env.MessagesTable
 
 exports.handler = function(event, context, callback) {
     console.log("request: " + JSON.stringify(event));
+    var table = process.env.MessagesTable;
     var params = {
         TableName: table,
         KeyConditionExpression: 'channel = :channel',
@@ -13,20 +13,34 @@ exports.handler = function(event, context, callback) {
         ScanIndexForward: false
     };
     console.log("Querying DynamoDB");
+    var response;
     docClient.query(params, function(err, data) {
         if (err) {
+            console.log('Error: ' + JSON.stringify(err));
+            response = {
+                statusCode: 500,
+                headers: {
+                    "Access-Control-Allow-Origin": "*",
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(err)
+            };
             callback(err);
         } else {
-            console.log(JSON.stringify(data));
-            var messages = data.Items.reverse(); //flipping order of results so most recent is on the bottom ordered by timestamp
-            var responseBody = {
+            console.log('success: ' + JSON.stringify(data));
+            var messages = {
+                "messages": data.Items.reverse() //flipping order of results so most recent is on the bottom ordered by timestamp
+            },
+            response = {
                 statusCode: 200,
-                body: messages, 
                 headers: {
-                    'Access-Control-Allow-Origin' : '*' // Required for CORS support to work
+                    "Access-Control-Allow-Origin": "*",
+                    'Content-Type': 'application/json'
                 },
+                body: (JSON.stringify(messages))
             };
-            callback(null, responseBody)
+            
+            callback(null, response)
         }
     });
 }

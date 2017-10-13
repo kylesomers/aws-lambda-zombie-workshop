@@ -22,26 +22,25 @@ angular.module('chatApp.chatMessages', [])
                 channel: 'default',
                 name: $rootScope.chatuser.name,
                 email: $rootScope.chatuser.email,
-                message: $scope.chatMessage
+                message: $scope.chatMessage,
+                timestamp: Date.now()
             };
             
             var req = {
                 method: 'POST',
-                url: MESSAGES_ENDPOINT + '/zombie/messages/message',
+                url: MESSAGES_ENDPOINT + '/integrations/web/messages',
                 headers: {
-                    Authorization: $rootScope.chatuser.jwt,
-                    'Content-Type': 'application/json',
-                    'clientcode': 'zombie-webapp'
+                    Authorization: $rootScope.chatuser.jwt
                 },
                 data: body
             }
 
-            console.log('Sending message to backend: ' + JSON.stringify(req))
+            console.log('Sending message: ' + JSON.stringify(req))
 
             $http(req)
             .then(function (response) {
                 //handle success
-                console.log('Message sent to database');
+                console.log('Message sent.');
                 console.log ('user email is ' + $rootScope.chatuser.email);
                 $scope.chatMessage = null;
                 $scope.posting = false;
@@ -72,7 +71,7 @@ angular.module('chatApp.chatMessages', [])
 
             var req = {
                 method: 'POST',
-                url: MESSAGES_ENDPOINT + '/zombie/talkers',
+                url: MESSAGES_ENDPOINT + '/talkers',
                 headers: {
                     Authorization: $rootScope.chatuser.jwt,
                     "Content-Type": "application/json"

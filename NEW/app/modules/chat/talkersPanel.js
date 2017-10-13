@@ -5,19 +5,20 @@ angular.module('chatApp.talkersPanel', [])
         var poll = function() {
             $timeout(function() {
                 if($rootScope.chatting) {
-                    console.log('Retrieving Talkers from Server'); 
+                    //console.log('Retrieving Talkers from Server'); 
                     var body = '';
                     var req = {
                         method: 'GET',
-                        url: MESSAGES_ENDPOINT + '/zombie/talkers',
+                        url: MESSAGES_ENDPOINT + '/talkers',
                         headers: {
                             Authorization: $rootScope.chatuser.jwt,
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            'Access-Control-Allow-Origin': '*'
                         }
                     }
                     $http(req).then(function successCallback(response) {
                         if($rootScope.chatting) {
-                            console.log('talkers are: ' + response.data.Talkers);
+                            //console.log('talkers are: ' + response.data.Talkers);
                             $scope.talkers = response.data.Talkers;
                             
                         } else {
@@ -25,8 +26,9 @@ angular.module('chatApp.talkersPanel', [])
                         }
                         
                     }, function errorCallback(response) {
-                            console.error('There was an error: ', response);
+                        //console.error('There was an error: ', response);
                         // or server returns response with an error status.
+                        
                     });
                     poll();
                 }

@@ -11,24 +11,25 @@ angular.module('chatApp.chatPanel', ['chatApp.chatMessages'])
 
                     var req = {
                         method: 'GET',
-                        url: MESSAGES_ENDPOINT + '/zombie/messages',
+                        url: MESSAGES_ENDPOINT + '/integrations/web/messages',
                         headers: {
-                            Authorization: $rootScope.chatuser.jwt,
-                            "Content-Type": "application/json"
+                            Authorization: $rootScope.chatuser.jwt
+
                         }
                     }
-
                     $http(req).then(function successCallback(response) {
                         if($rootScope.chatting) {
                             console.log('response is: ' + JSON.stringify(response));
-                            $scope.messages = response.data.body;
+                            $scope.messages = response.data.messages;
+                            
                         } else {
                             $scope.messages = null;
                         }
                         
                     }, function errorCallback(response) {
-                            console.error('There was an error: ', JSON.stringify(response));
+                        console.log('There was an error: ', JSON.stringify(response));
                         // or server returns response with an error status.
+                        
                     });
 
                     poll();

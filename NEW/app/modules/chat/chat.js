@@ -45,6 +45,8 @@ angular.module('chatApp.chat', ['chatApp.utils'])
 
             });
         });
+    } else {
+        $state.go('signin', { });
     }
 
 
@@ -71,14 +73,12 @@ angular.module('chatApp.chat', ['chatApp.utils'])
     };
 
     $scope.signout = function() {
-        if (cognitoUser != null) {
-            console.log("logging user out");
-            $scope.chatState = "Start Chatting";
-            $rootScope.chatting = false;
-            $rootScope.$emit('not chatting');
-            cognitoUser.signOut();
-            $state.go('signin', { });
-        }
+        console.log("logging user out");
+        $scope.chatState = "Start Chatting";
+        $rootScope.chatting = false;
+        $rootScope.$emit('not chatting');
+        cognitoUser.globalSignOut(); //signOut();
+        $state.go('signin', { });
     };
 
 

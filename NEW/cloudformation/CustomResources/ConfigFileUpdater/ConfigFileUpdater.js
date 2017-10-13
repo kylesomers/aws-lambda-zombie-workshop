@@ -10,8 +10,10 @@ exports.handler = function(event, context, callback) {
   var region = event.ResourceProperties.region; // the region where Cognito exists. Cognito not in all regions so this is passed in from CFN.
   var api = event.ResourceProperties.api;
   var s3 = new AWS.S3();
-  var clientId = 'INSERT_CLIENT_ID_HERE';
-  var userPoolId = 'INSERT_USER_POOL_ID_HERE';
+  var clientId = event.ResourceProperties.userPoolsConfig.clientId;
+  var userPoolId = event.ResourceProperties.userPoolsConfig.userPoolId;
+  var apiObject = event.ResourceProperties.apiObject;
+  //var identityPoolId = event.ResourceProperties.identityPoolId;
 
   // If DELETE request type is sent, return success to cloudformation. User will manually tear down Cognito resources
   if (event.RequestType == "Delete") {
@@ -22,7 +24,7 @@ exports.handler = function(event, context, callback) {
 
   // if request type is CREATE or UPDATE, create the resources
   else {
-
+    console.log('apiObject: ' + JSON.stringify(apiObject));
     var params = {
       Bucket: bucket,
       Key: constantsFileKey,

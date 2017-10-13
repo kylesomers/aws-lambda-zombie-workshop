@@ -4,36 +4,43 @@ var jwt = require('jsonwebtoken');
 var request = require('request'); 
 var jwkToPem = require('jwk-to-pem');
 
-var userPoolId = process.env.UserPoolId;
+var userPoolId = process.env.userPoolId;
 var region = process.env.region; //e.g. us-east-1
 var iss = 'https://cognito-idp.' + region + '.amazonaws.com/' + userPoolId;
 var pems;
 
 exports.handler = function(event, context, callback) {
+    console.log('full event payload is: ' + JSON.stringify(event));
+    var token = event.authorizationToken;
+    var authMode = checkAuthMode(token);
+    // Handle Slack integration authorization
+
+
+
     
-    if (event.headers.clientcode === null) { //only allow requests if they contain a clientheader from one of our accepted clients
-        callback (err)
-    }
 
-    var clientCode = event.headers.clientcode;
-    
-    // Custom authorizer logic for requests from Web application (callout to User Pools)
-    if (clientCode == process.env.cognitoUserPoolsClientCode){
-        CognitoUserPoolsValidator(pems, event, context)
-    }
+    switch ()
 
-    // Custom authorizer logic for requests from Slack Lambda function integration to validate Slack token
-    if (clientCode == process.env.slackIntegrationClientCode){
-        SlackIntegrationValidator(event, context)
-    }
+    if 
 
-    // Custom authorizer logic for requests from Twilio Lambda function integration to validate phone number
-    if (clientCode == process.env.twilioIntegrationClientCode){
-        TwilioIntegrationValidator(event, context)
-    }
+    cognitoUserPoolsValidator(pems, event, context)
+
 };
 
-function CognitoUserPoolsValidator(pems, event, context){
+function checkAuthMode(token) {
+    if (token.includes('::slack')) {
+        console.log('This is a request from Slack service');
+        return ('slack');
+    } else if (token.includes('::twilio')) {
+        console.log('This is a request from Twilio service');
+        return ('twilio');
+    } else {
+        console.log('This is a request from Chat web app');
+        return ('cup');
+    }
+}
+
+function cognitoUserPoolsValidator(pems, event, context){
     //Download PEM for your UserPool if not already downloaded
     if (!pems) {
     //Download the JWKs and save it as PEM
@@ -87,13 +94,6 @@ function ValidateJwtToken(pems, event, context) {
         return;
     }
 
-    //Reject the jwt if it's not an 'Access Token'
-    if (decodedJwt.payload.token_use != 'access') {
-        console.log("Not an access token");
-        context.fail("Unauthorized");
-        return;
-    }
-
     //Get the kid from the token and retrieve corresponding PEM
     var kid = decodedJwt.header.kid;
     var pem = pems[kid];
@@ -129,7 +129,9 @@ function ValidateJwtToken(pems, event, context) {
         }
         //For more information on specifics of generating policy, refer to blueprint for API Gateway's Custom authorizer in Lambda console
         var policy = new AuthPolicy(principalId, awsAccountId, apiOptions);
-        policy.allowAllMethods();
+        //policy.allowAllMethods();
+        policy.allowMethod(AuthPolicy.HttpVerb.POST, "/zombie/messages/message");
+        console.log('Allowing POST on /zombie/messages/message');
         context.succeed(policy.build());
       }
     });

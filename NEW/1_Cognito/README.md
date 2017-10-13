@@ -123,9 +123,9 @@ After creating the User Pool and uploading a modified configuration constants fi
 
 </p></details>
 
-### 3. Configure API Authorization on 
+### 3. Setup API Authorization
 
-After creating the User Pool and uploading a modified configuration constants file to S3, you are ready to test the application sign-up and sign-in! We want to make sure that the User Pool is setup correctly and is properly integrated with the Web Application. At the completion of this section you should be able to sign up for a survivor account, sign into the application, and send chat messages.
+Your API is now working and allows you to send and receive messages in the survivor chat system. However, the API does not have authorization on the resource methods. In this section, you will configure your API to require authorization with JWT tokens, which are provided to your web client when you sign-in to the web client and authenticate against Cognito User Pools.
 
 <details>
 <summary><strong>Step-by-step instructions (expand for details)</strong></summary><p>

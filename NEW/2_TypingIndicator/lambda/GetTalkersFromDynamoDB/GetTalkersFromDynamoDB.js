@@ -1,10 +1,11 @@
 console.log('Loading function');
 var aws = require('aws-sdk');
 var docClient = new aws.DynamoDB.DocumentClient();
-var table = process.env.MessagesTable
+
 
 exports.handler = function(event, context, callback) {
     console.log("request: " + JSON.stringify(event));
+    var table = process.env.TalkersTable;
     var params = {
         TableName: table,
         KeyConditionExpression: 'channel = :channel',
